@@ -115,6 +115,10 @@ class ModuleConstants:
     kDrivingMotorCurrentLimit = 50  # amp
     kTurningMotorCurrentLimit = 20  # amp
 
+class OIConstants:
+    kDriverControllerPort = 0
+    kDriveDeadband = 0.1
+
 
 class turretMotorConstants: 
     TURRET_VERTICAL_MOTOR = 1

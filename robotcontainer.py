@@ -15,57 +15,99 @@ from commands.eject import Eject
 from commands.exampleauto import ExampleAuto
 from commands.intake import Intake
 from commands.launchsequence import LaunchSequence
-from subsystems.candrivesubsystem import CANDriveSubsystem
-from subsystems.canfuelsubsystem import CANFuelSubsystem
+from subsystems.drive import DriveSubsystem
+from subsystems.fuelConsumer import fuelSubsystem
 
-# all of this below is for drive stuff but right now i dont want to think about any of that. THanks - JAMIE
-# class RobotContainer:
-#     def __init__(self) -> None:
-#         # The robot's subsystems
-#         self.driveSubsystem = CANDriveSubsystem()
-#         self.fuelSubsystem = CANFuelSubsystem()
+class RobotContainer:
+    def __init__(self) -> None:
+        # The robot's subsystems
+        self.DriveSubsystem = drive()
+        self.fuelSubsystem = fuelConsumer()
 
-#         # The driver's controller (Change this - Jamie)
-#         self.driverController = commands2.button.CommandXboxController(
-#             OperatorConstants.DRIVER_CONTROLLER_PORT
-#         )
+        # controller 
+        self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
 
-#         # The operator's controller (Change this - Jamie)
-#         self.operatorController = commands2.button.CommandXboxController(
-#             OperatorConstants.OPERATOR_CONTROLLER_PORT
-#         )
+        # configure button bindings
+        self.configureButtonBindings()
 
-#         # The autonomous chooser (Change this - Jamie)
-#         self.autoChooser = wpilib.SendableChooser()
+        self.robot_drive.setDefaultCommand(
+            # The left stick controls translation of the robot.
+            # Turning is controlled by the X axis of the right stick.
+            commands2.RunCommand(
+                lambda: self.robot_drive.drive(
+                    -wpimath.applyDeadband(
+                        self.driverController.getLeftY(), OIConstants.kDriveDeadband
+                    ),
+                    -wpimath.applyDeadband(
+                        self.driverController.getLeftX(), OIConstants.kDriveDeadband
+                    ),
+                    -wpimath.applyDeadband(
+                        self.driverController.getRightX(), OIConstants.kDriveDeadband
+                    ),
+                    fieldRelative=True,
+                    rateLimit=False,
+                ),
+                self.robot_drive,
+            )
+        )
 
-#         self.configureBindings()
+        def configureButtonBindings(self) -> None:
+        """
+        Use this method to define your button->command mappings. Buttons can be created by
+        instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
+        and then passing it to a JoystickButton.
+        """
 
-#         # Set the options to show up in the Dashboard for selecting auto modes. (Change this - Jamie)
-#         self.autoChooser.setDefaultOption(
-#             "Autonomous", ExampleAuto(self.driveSubsystem, self.fuelSubsystem)
-#         )
-#         wpilib.SmartDashboard.putData("Autonomous", self.autoChooser)
+        # # Run default command on the lift_intake subsystem. This will basically run it over
+        # # and over until something else runs on lift_intake.
+        # self.robot_lift.setDefaultCommand(
+        #     # RunCommand is a function that turns a function into a Command. Good for less complicated stuff.
+        #     commands2.RunCommand(
+        #         # You need to pass a function to this. You can't pass parameters to a function normally,
+        #         # and we need to pass getLeftY(), so we make a lambda around it. Basically we're constantly
+        #         # setting the intake power to the left joystick's Y value.
+        #         lambda: self.robot_lift.set_motor_power(self.driverController.getLeftY()),
+        #         self.robot_lift
+        #     )
+        # )
 
-#     def configureBindings(self) -> None:
-#         # While the left bumper on operator controller is held, intake Fuel
-#         self.operatorController.leftBumper().whileTrue(Intake(self.fuelSubsystem))
-#         # While the right bumper on the operator controller is held, spin up for 1
-#         # second, then launch fuel. When the button is released, stop.
-#         self.operatorController.rightBumper().whileTrue(
-#             LaunchSequence(self.fuelSubsystem)
-#         )
-#         # While the A button is held on the operator controller, eject fuel back out
-#         # the intake
-#         self.operatorController.a().whileTrue(Eject(self.fuelSubsystem))
+        # self.robot_joint.setDefaultCommand(
+        #     commands2.RunCommand(
+        #         lambda: self.robot_joint.set_motor_power(self.driverController.getRightY()),
+        #         self.robot_joint
+        #     )
+        # )
+        
+        # One time action--much simpler.
+        # replace Y with the button you want. the thing passed to onTrue is a Command.
+        # self.driverController.a().onTrue(SourceIntake(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
+        # self.driverController.a().onFalse(SourceRestore(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
+        # self.driverController.b().whileTrue(ReefScoreL2(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
+        # self.driverController.x().whileTrue(ReefScoreL3(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
+        # self.driverController.y().whileTrue(ReefScoreL4(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
 
-#         # Set the default command for the drive subsystem to the command provided by
-#         # factory with the values provided by the joystick axes on the driver
-#         # controller.
-#         self.driveSubsystem.setDefaultCommand(
-#             Drive(self.driveSubsystem, self.driverController)
-#         )
+        # self.driverController.leftTrigger().onTrue(AlgaeIntake(self.robot_lift, self.robot_algae))
+        # self.driverController.leftTrigger().onFalse(AlgaeRestore(self.robot_lift, self.robot_algae))
+        # self.driverController.rightTrigger().onTrue(self.algae_outtake)
+        # self.driverController.rightTrigger().onFalse(self.algae_stoptake)
 
-#         self.fuelSubsystem.run(lambda: self.fuelSubsystem.stop())
+        # self.driverController.leftBumper().onTrue(ReefBludgeonHigh(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive)) # Algae Bludgeon
+        # self.driverController.rightBumper().onTrue(ReefBludgeonLow(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive)) # Algae Bludgeon
 
-#     def getAutonomousCommand(self) -> commands2.Command:
-#         return self.autoChooser.getSelected()
+        # self.driverController.start().onTrue(GrabberGrabReset(self.robot_grabber))
+        # self.driverController.start().onFalse(self.grabber_stop)
+
+        # self.driverController.leftBumper().onTrue(GrabberGrabReset(self.robot_grabber))
+        # self.driverController.rightBumper().onTrue(GrabberToSetpoint(self.robot_grabber, GrabberConstants.setpoint_open, True))
+        
+        # self.driverController.a().onTrue(self.roller_grab)
+        # self.driverController.a().onFalse(self.roller_stop)
+        # self.driverController.b().onTrue(self.roller_release)
+        # self.driverController.b().onFalse(self.roller_stop)
+
+        reset_gyro = commands2.InstantCommand(
+            lambda: self.robot_drive.gyro.reset(),
+            self.robot_drive
+        )
+        self.driverController.a().onTrue(reset_gyro)
+
