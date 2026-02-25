@@ -11,10 +11,6 @@ import commands2.cmd
 
 from constants import OIConstants
 from commands.drive import Drive
-from commands.eject import Eject
-from commands.exampleauto import ExampleAuto
-from commands.intake import Intake
-from commands.launchsequence import LaunchSequence
 from subsystems.drive import DriveSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
 
