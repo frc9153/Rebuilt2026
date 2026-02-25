@@ -17,7 +17,7 @@ import navx
 
 from constants import DriveConstants
 import swerveutils
-from .maxswervemodule import MAXSwerveModule
+from .maxSwerveModule import MAXSwerveModule
 
 
 class DriveSubsystem(Subsystem):
