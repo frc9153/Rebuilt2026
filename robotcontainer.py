@@ -21,11 +21,11 @@ from subsystems.fuelConsumer import fuelSubsystem
 class RobotContainer:
     def __init__(self) -> None:
         # The robot's subsystems
-        self.DriveSubsystem = drive()
-        self.fuelSubsystem = fuelConsumer()
+        self.robot_drive = DriveSubsystem()
+        self.fuel = fuelSubsystem()
 
         # controller 
-        self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
+        self.driverController = commands2.button.CommandXboxController(OperatorConstants.kDriverControllerPort)
 
         # configure button bindings
         self.configureButtonBindings()
@@ -36,13 +36,13 @@ class RobotContainer:
             commands2.RunCommand(
                 lambda: self.robot_drive.drive(
                     -wpimath.applyDeadband(
-                        self.driverController.getLeftY(), OIConstants.kDriveDeadband
+                        self.driverController.getLeftY(), OperatorConstants.kDriveDeadband
                     ),
                     -wpimath.applyDeadband(
-                        self.driverController.getLeftX(), OIConstants.kDriveDeadband
+                        self.driverController.getLeftX(), OperatorConstants.kDriveDeadband
                     ),
                     -wpimath.applyDeadband(
-                        self.driverController.getRightX(), OIConstants.kDriveDeadband
+                        self.driverController.getRightX(), OperatorConstants.kDriveDeadband
                     ),
                     fieldRelative=True,
                     rateLimit=False,
@@ -51,7 +51,7 @@ class RobotContainer:
             )
         )
 
-        def configureButtonBindings(self) -> None:
+    def configureButtonBindings(self) -> None:
         """
         Use this method to define your button->command mappings. Buttons can be created by
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
