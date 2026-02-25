@@ -9,23 +9,23 @@ import commands2
 import commands2.button
 import commands2.cmd
 
-from constants import OperatorConstants
+from constants import OIConstants
 from commands.drive import Drive
 from commands.eject import Eject
 from commands.exampleauto import ExampleAuto
 from commands.intake import Intake
 from commands.launchsequence import LaunchSequence
 from subsystems.drive import DriveSubsystem
-from subsystems.fuelConsumer import fuelSubsystem
+from subsystems.fuelConsumer import intakeSubsystem
 
 class RobotContainer:
     def __init__(self) -> None:
         # The robot's subsystems
         self.robot_drive = DriveSubsystem()
-        self.fuel = fuelSubsystem()
+        self.fuel = intakeSubsystem()
 
         # controller 
-        self.driverController = commands2.button.CommandXboxController(OperatorConstants.kDriverControllerPort)
+        self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
 
         # configure button bindings
         self.configureButtonBindings()
@@ -36,13 +36,13 @@ class RobotContainer:
             commands2.RunCommand(
                 lambda: self.robot_drive.drive(
                     -wpimath.applyDeadband(
-                        self.driverController.getLeftY(), OperatorConstants.kDriveDeadband
+                        self.driverController.getLeftY(), OIConstants.kDriveDeadband
                     ),
                     -wpimath.applyDeadband(
-                        self.driverController.getLeftX(), OperatorConstants.kDriveDeadband
+                        self.driverController.getLeftX(), OIConstants.kDriveDeadband
                     ),
                     -wpimath.applyDeadband(
-                        self.driverController.getRightX(), OperatorConstants.kDriveDeadband
+                        self.driverController.getRightX(), OIConstants.kDriveDeadband
                     ),
                     fieldRelative=True,
                     rateLimit=False,
