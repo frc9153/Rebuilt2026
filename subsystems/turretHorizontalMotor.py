@@ -3,6 +3,9 @@ import rev
 
 from constants import turretMotorConstants
 
+# This stuff just sets up our motors. Every motor that needs to move independently of one another
+# Needs its own subsystem. Kinda annoying. But watevs. #LOL
+
 class turretHorizontalMotorSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
