@@ -8,16 +8,22 @@ import wpilib
 import commands2
 import commands2.button
 import commands2.cmd
+import wpimath
 
 from constants import OIConstants
-from commands.drive import Drive
+from commands.driveCommand import DriveCommand
 from subsystems.drive import DriveSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
 
 class RobotContainer:
     def __init__(self) -> None:
+
         # The robot's subsystems
         self.robot_drive = DriveSubsystem()
+        self.fuel = intakeSubsystem()
+
+        self.gyro = navx.AHRS.create_spi() 
+        self.robot_drive = DriveSubsystem(self.gyro) 
         self.fuel = intakeSubsystem()
 
         # controller 

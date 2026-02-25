@@ -1,7 +1,7 @@
 import commands2
 
 from constants import DriveConstants
-from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.drive import DriveSubsystem
 
 class DriveCommand(commands2.Command):
 

@@ -1,14 +1,14 @@
 import commands2
 import rev
 
-from constants import intakeConstants
+from constants import fuelConstants
 
 class intakeSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
 
         self.motor = rev.SparkMax(
-            intakeConstants.INTAKE_MOTOR, rev.SparkLowLevel.MotorType.kBrushed
+            fuelConstants.FUEL_MOTOR,rev.SparkLowLevel.MotorType.kBrushed
         )
 
         config = rev.SparkMaxConfig()
@@ -22,4 +22,4 @@ class intakeSubsystem(commands2.Subsystem):
         )
     
     def setIntake(self, voltage: float) -> None:
-        self.intake.setVoltage(voltage)
+        self.motor.setVoltage(voltage)
