@@ -121,9 +121,9 @@ class OIConstants:
 
 
 class turretMotorConstants: 
-    TURRET_VERTICAL_MOTOR = 1
-    TURRET_HORIZONTAL_MOTOR = 2
-    TURRET_SHOOT_MOTOR = 3
+    TURRET_VERTICAL_MOTOR = 9
+    TURRET_HORIZONTAL_MOTOR = 10
+    TURRET_SHOOT_MOTOR = 11
 
 class fuelConstants:
-    FUEL_MOTOR = 4
+    FUEL_MOTOR = 12
