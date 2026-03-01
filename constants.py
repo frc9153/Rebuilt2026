@@ -32,7 +32,7 @@ class DriveConstants:
     # Chassis configuration
     kTrackWidth = units.inchesToMeters(26.5)
     # Distance between centers of right and left wheels on robot
-    kWheelBase = units.inchesToMeters(26.5)
+    kWheelBase = units.inchesToMeters(21.5)
 
     # Distance between front and back wheels on robot
     kModulePositions = [
@@ -123,7 +123,8 @@ class OIConstants:
 class turretMotorConstants: 
     TURRET_VERTICAL_MOTOR = 9
     TURRET_HORIZONTAL_MOTOR = 10
-    TURRET_SHOOT_MOTOR = 11
+    TURRET_SHOOT_MOTOR_ONE = 11
+    TURRET_SHOOT_MOTOR_TWO = 12
 
 class fuelConstants:
-    FUEL_MOTOR = 12
+    FUEL_MOTOR = 13

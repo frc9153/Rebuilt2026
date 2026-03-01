@@ -15,12 +15,16 @@ from constants import OIConstants
 from commands.driveCommand import DriveCommand
 from subsystems.drive import DriveSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
+from commands.shooterLeftRight import shooterNuhUhCommand
+from commands.shooterUpDown import shooterYuhHuhCommand
 
 class RobotContainer:
     def __init__(self) -> None:
         self.gyro = navx.AHRS.create_spi() 
         self.robot_drive = DriveSubsystem(self.gyro) 
         self.fuel = intakeSubsystem()
+        self.nosub = turretHorizontalMotorSubsystem()
+        self.yessub = turretVerticalMotorSubsystem()
 
         # controller 
         self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
@@ -102,6 +106,14 @@ class RobotContainer:
         # self.driverController.a().onFalse(self.roller_stop)
         # self.driverController.b().onTrue(self.roller_release)
         # self.driverController.b().onFalse(self.roller_stop)
+
+        # controls turret going left/right
+        self.driverController.leftBumper.whileTrue(shooterNuhUhCommand(self.nosub,-0.05))
+        self.driverController.rightBumper.whileTrue(shooterNuhUhCommand(self.nosub,0.05))
+
+        # controls turret going up/down
+        self.driverController.povDown.whileTrue(shooterYuhHuhCommand(self.yessub, -0.05))
+        self.driverController.povUp.whileTrue(shooterYuhHuhCommand(self.yessub, 0.05))
 
         reset_gyro = commands2.InstantCommand(
             lambda: self.robot_drive.gyro.reset(),
