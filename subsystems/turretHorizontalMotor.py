@@ -18,12 +18,16 @@ class turretHorizontalMotorSubsystem(commands2.Subsystem):
         config = rev.SparkMaxConfig()
         # config.voltageCompensation(12)
         # config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT)
+
+        config.closedLoop.pid(0.1, 0.0, 0.0)
         
         self.motor.configure(
             config,
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
+
+        self.pid_controller = self.motor.getClosedLoopController()
     
     def setMotorSpeed(self, speed):
         self.motor.set(speed)
