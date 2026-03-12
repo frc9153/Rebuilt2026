@@ -9,10 +9,10 @@ class turretShootMotorSubsystem(commands2.Subsystem):
         
         # check motor types for these im hallucinating and i dont know what they are 
         self.motor_one = rev.SparkMax(
-            turretMotorConstants.TURRET_SHOOT_MOTOR_ONE, rev.SparkLowLevel.MotorType.kBrushed
+            turretMotorConstants.TURRET_SHOOT_MOTOR_ONE, rev.SparkLowLevel.MotorType.kBrushless
         )
         self.motor_two = rev.SparkMax(
-            turretMotorConstants.TURRET_SHOOT_MOTOR_TWO, rev.SparkLowLevel.MotorType.kBrushed
+            turretMotorConstants.TURRET_SHOOT_MOTOR_TWO, rev.SparkLowLevel.MotorType.kBrushless
         )
         
         config = rev.SparkMaxConfig()

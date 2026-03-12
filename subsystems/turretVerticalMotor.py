@@ -8,10 +8,10 @@ class turretVerticalMotorSubsystem(commands2.Subsystem):
         super().__init__()
         
         self.motor = rev.SparkMax(
-            turretMotorConstants.TURRET_VERTICAL_MOTOR, rev.SparkLowLevel.MotorType.kBrushed
+            turretMotorConstants.TURRET_VERTICAL_MOTOR, rev.SparkLowLevel.MotorType.kBrushless
         )
 
-        self.abs_encoder = self.motor.getAbsoluteEncoder(rev.SparkMaxAbsoluteEncoder.Type.kDutyCycle)
+        self.abs_encoder = self.motor.getAbsoluteEncoder()
         
         config = rev.SparkMaxConfig()
         

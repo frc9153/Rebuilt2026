@@ -1,4 +1,4 @@
-from rev import SparkMax, SparkMaxConfig, SparkFlex, SparkFlexConfig, SparkBase, ClosedLoopConfig, FeedbackSensor, ResetMode, PersistMode
+from rev import SparkMax, SparkMaxConfig, SparkBase, ClosedLoopConfig, FeedbackSensor, ResetMode, PersistMode
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import SwerveModuleState, SwerveModulePosition
 
@@ -18,27 +18,25 @@ class MAXSwerveModule:
         self.chassis_angular_offset = 0
         self.desired_state = SwerveModuleState(0.0, Rotation2d())
 
-        self.driving_spark_flex = SparkFlex(
-            driving_can_id, SparkFlex.MotorType.kBrushless
+        self.driving_spark_max = SparkMax(
+            driving_can_id, SparkMax.MotorType.kBrushless
         )
         self.turning_spark_max = SparkMax(
             turning_can_id, SparkMax.MotorType.kBrushless
         )
 
-        self.driving_config = SparkFlexConfig()
+        self.driving_config = SparkMaxConfig()
         self.turning_config = SparkMaxConfig()
 
         # Factory reset, so we get the SPARKS MAX to a known state before configuring
         # them. This is useful in case a SPARK MAX is swapped out.
-        # self.driving_spark_flex.restoreFactoryDefaults()
+        # self.driving_spark_max.restoreFactoryDefaults()
         # self.turning_spark_max.restoreFactoryDefaults()
 
         # Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-        self.driving_encoder = self.driving_spark_flex.getEncoder()
-        self.turning_encoder = self.turning_spark_max.getAbsoluteEncoder(
-            # SparkMaxAbsoluteEncoder.Type.kDutyCycle
-        )
-        self.driving_pid_controller = self.driving_spark_flex.getClosedLoopController()
+        self.driving_encoder = self.driving_spark_max.getEncoder()
+        self.turning_encoder = self.turning_spark_max.getAbsoluteEncoder()
+        self.driving_pid_controller = self.driving_spark_max.getClosedLoopController()
         self.turning_pid_controller = self.turning_spark_max.getClosedLoopController()
         self.driving_config.closedLoop.setFeedbackSensor(FeedbackSensor.kPrimaryEncoder)
         self.turning_config.closedLoop.setFeedbackSensor(FeedbackSensor.kAbsoluteEncoder)
@@ -110,7 +108,7 @@ class MAXSwerveModule:
 
         # Save the SPARK MAX configurations. If a SPARK MAX browns out during
         # operation, it will maintain the above configurations.
-        self.driving_spark_flex.configure(self.driving_config,
+        self.driving_spark_max.configure(self.driving_config,
                                           ResetMode.kResetSafeParameters,
                                           PersistMode.kPersistParameters)
         self.turning_spark_max.configure(self.turning_config,

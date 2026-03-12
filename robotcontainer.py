@@ -11,10 +11,14 @@ import commands2.cmd
 import wpimath
 import navx
 
+from commands.fuelEat import fuelEatCommand
 from constants import OIConstants
 from commands.driveCommand import DriveCommand
 from subsystems.drive import DriveSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
+from subsystems.fuelUpDown import intakeUpDownSubsystem
+from subsystems.turretVerticalMotor import turretVerticalMotorSubsystem
+from subsystems.turretHorizontalMotor import turretHorizontalMotorSubsystem
 from commands.shooterLeftRight import shooterNuhUhCommand
 from commands.shooterUpDown import shooterYuhHuhCommand
 
@@ -23,8 +27,9 @@ class RobotContainer:
         self.gyro = navx.AHRS.create_spi() 
         self.robot_drive = DriveSubsystem(self.gyro) 
         self.fuel = intakeSubsystem()
-        self.nosub = turretHorizontalMotorSubsystem()
-        self.yessub = turretVerticalMotorSubsystem()
+        self.fuelUpDown = intakeUpDownSubsystem()
+        # self.nosub = turretHorizontalMotorSubsystem()
+        # self.yessub = turretVerticalMotorSubsystem()
 
         # controller 
         self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
@@ -59,65 +64,20 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-
-        # # Run default command on the lift_intake subsystem. This will basically run it over
-        # # and over until something else runs on lift_intake.
-        # self.robot_lift.setDefaultCommand(
-        #     # RunCommand is a function that turns a function into a Command. Good for less complicated stuff.
-        #     commands2.RunCommand(
-        #         # You need to pass a function to this. You can't pass parameters to a function normally,
-        #         # and we need to pass getLeftY(), so we make a lambda around it. Basically we're constantly
-        #         # setting the intake power to the left joystick's Y value.
-        #         lambda: self.robot_lift.set_motor_power(self.driverController.getLeftY()),
-        #         self.robot_lift
-        #     )
-        # )
-
-        # self.robot_joint.setDefaultCommand(
-        #     commands2.RunCommand(
-        #         lambda: self.robot_joint.set_motor_power(self.driverController.getRightY()),
-        #         self.robot_joint
-        #     )
-        # )
-        
-        # One time action--much simpler.
-        # replace Y with the button you want. the thing passed to onTrue is a Command.
-        # self.driverController.a().onTrue(SourceIntake(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
-        # self.driverController.a().onFalse(SourceRestore(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
-        # self.driverController.b().whileTrue(ReefScoreL2(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
-        # self.driverController.x().whileTrue(ReefScoreL3(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
-        # self.driverController.y().whileTrue(ReefScoreL4(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive))
-
-        # self.driverController.leftTrigger().onTrue(AlgaeIntake(self.robot_lift, self.robot_algae))
-        # self.driverController.leftTrigger().onFalse(AlgaeRestore(self.robot_lift, self.robot_algae))
-        # self.driverController.rightTrigger().onTrue(self.algae_outtake)
-        # self.driverController.rightTrigger().onFalse(self.algae_stoptake)
-
-        # self.driverController.leftBumper().onTrue(ReefBludgeonHigh(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive)) # Algae Bludgeon
-        # self.driverController.rightBumper().onTrue(ReefBludgeonLow(self.robot_lift, self.robot_joint, self.robot_grabber, self.robot_drive)) # Algae Bludgeon
-
-        # self.driverController.start().onTrue(GrabberGrabReset(self.robot_grabber))
-        # self.driverController.start().onFalse(self.grabber_stop)
-
-        # self.driverController.leftBumper().onTrue(GrabberGrabReset(self.robot_grabber))
-        # self.driverController.rightBumper().onTrue(GrabberToSetpoint(self.robot_grabber, GrabberConstants.setpoint_open, True))
-        
-        # self.driverController.a().onTrue(self.roller_grab)
-        # self.driverController.a().onFalse(self.roller_stop)
-        # self.driverController.b().onTrue(self.roller_release)
-        # self.driverController.b().onFalse(self.roller_stop)
-
+        # THAT
         # controls turret going left/right
-        self.driverController.leftBumper.whileTrue(shooterNuhUhCommand(self.nosub,-0.05))
-        self.driverController.rightBumper.whileTrue(shooterNuhUhCommand(self.nosub,0.05))
+        # self.driverController.leftBumper().whileTrue(shooterNuhUhCommand(self.nosub,-0.05))
+        # self.driverController.rightBumper().whileTrue(shooterNuhUhCommand(self.nosub,0.05))
 
-        # controls turret going up/down
-        self.driverController.povDown.whileTrue(shooterYuhHuhCommand(self.yessub, -0.05))
-        self.driverController.povUp.whileTrue(shooterYuhHuhCommand(self.yessub, 0.05))
+        # # controls turret going up/down
+        # self.driverController.povDown().whileTrue(shooterYuhHuhCommand(self.yessub, -0.05))
+        # self.driverController.povUp().whileTrue(shooterYuhHuhCommand(self.yessub, 0.05))
 
-        reset_gyro = commands2.InstantCommand(
-            lambda: self.robot_drive.gyro.reset(),
-            self.robot_drive
-        )
-        self.driverController.a().onTrue(reset_gyro)
+        # reset_gyro = commands2.InstantCommand(
+        #     lambda: self.robot_drive.gyro.reset(),
+        #     self.robot_drive
+        # )
+        self.driverController.a().onTrue(fuelEatCommand(self.fuel))
 
+    def getAutonomousCommand(self) -> commands2.Command:
+        return commands2.InstantCommand(lambda: None)

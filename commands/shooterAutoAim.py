@@ -28,14 +28,14 @@ class shooterAutoAimCommand(commands2.Command):
 
     def execute(self):
         offsets = get_center_offsets()
-        print(len(offsets))
+        # print("Offset count", len(offsets))
 
         # TODO: Print difference from avg or something jamiepilled
         average_offset = [
             sum([o[0] for o in offsets]) / len(offsets),
             sum([o[1] for o in offsets]) / len(offsets)
         ]
-        print(average_offset)
+        # print("Avg offset", average_offset)
 
         if len(offsets) == 0:
             # Find mama. Where is mama, help.

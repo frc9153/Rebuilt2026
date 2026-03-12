@@ -86,7 +86,7 @@ class DriveSubsystem(Subsystem):
             ),
         )
 
-        print(self.gyro.getAngle())
+        # print("Angle", self.gyro.getAngle())
 
     def getPose(self) -> Pose2d:
         """Returns the currently-estimated pose of the robot.

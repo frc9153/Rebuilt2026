@@ -21,7 +21,7 @@ class shooterYuhHuhCommand(commands2.Command):
     def isFinished(self):
         angle = self.yessub.getAbsolutePosition()
 
-        if (y>0 and angle>60) or (y<0 and angle<90)
+        if (y>0 and angle>60) or (y<0 and angle<90):
             return True
-        else 
+        else:
             return False

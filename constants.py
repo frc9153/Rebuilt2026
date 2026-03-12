@@ -50,15 +50,15 @@ class DriveConstants:
     kBackRightChassisAngularOffset = math.pi / 2
 
     # SPARK MAX CAN IDs
-    kFrontLeftDrivingCanId = 7
-    kRearLeftDrivingCanId = 5
-    kFrontRightDrivingCanId = 1
-    kRearRightDrivingCanId = 3
+    kFrontLeftDrivingCanId = 5
+    kRearLeftDrivingCanId = 7
+    kFrontRightDrivingCanId = 3
+    kRearRightDrivingCanId = 1
 
-    kFrontLeftTurningCanId = 8
-    kRearLeftTurningCanId = 6
-    kFrontRightTurningCanId = 2
-    kRearRightTurningCanId = 4
+    kFrontLeftTurningCanId = 6
+    kRearLeftTurningCanId = 8
+    kFrontRightTurningCanId = 4
+    kRearRightTurningCanId = 2
 
     kGyroReversed = False
 
@@ -120,11 +120,15 @@ class OIConstants:
     kDriveDeadband = 0.1
 
 
-class turretMotorConstants: 
+class turretMotorConstants:
     TURRET_VERTICAL_MOTOR = 9
     TURRET_HORIZONTAL_MOTOR = 10
-    TURRET_SHOOT_MOTOR_ONE = 11
-    TURRET_SHOOT_MOTOR_TWO = 12
+
+    TURRET_SHOOT_MOTOR_ONE = 13
+    TURRET_SHOOT_MOTOR_TWO = 14  # ?????????? WHAT IS IT??? Curse You Claire Curse You
 
 class fuelConstants:
-    FUEL_MOTOR = 13
+    EAT_POWER = 0.5
+
+    FUEL_UP_DOWN_MOTOR = 11
+    FUEL_MOTOR = 12

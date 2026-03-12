@@ -12,7 +12,7 @@ class turretHorizontalMotorSubsystem(commands2.Subsystem):
         
         # check motor types for these im hallucinating and i dont know what they are 
         self.motor = rev.SparkMax(
-            turretMotorConstants.TURRET_HORIZONTAL_MOTOR, rev.SparkLowLevel.MotorType.kBrushed
+            turretMotorConstants.TURRET_HORIZONTAL_MOTOR, rev.SparkLowLevel.MotorType.kBrushless
         )
         
         config = rev.SparkMaxConfig()
