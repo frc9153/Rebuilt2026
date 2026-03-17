@@ -11,10 +11,13 @@ import commands2.cmd
 import wpimath
 import navx
 
+from commands.changeThrobberErection import changeThrobberErectionCommand
+from commands.elevateToPoint import elevateToPointCommand
 from commands.fuelEat import fuelEatCommand
-from constants import OIConstants
+from constants import OIConstants, elevatorConstants
 from commands.driveCommand import DriveCommand
 from subsystems.drive import DriveSubsystem
+from subsystems.elevator import elevatorSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
 from subsystems.fuelUpDown import intakeUpDownSubsystem
 from subsystems.turretVerticalMotor import turretVerticalMotorSubsystem
@@ -24,12 +27,22 @@ from commands.shooterUpDown import shooterYuhHuhCommand
 
 class RobotContainer:
     def __init__(self) -> None:
-        self.gyro = navx.AHRS.create_spi() 
-        self.robot_drive = DriveSubsystem(self.gyro) 
+        self.gyro = navx.AHRS.create_spi()
+        self.robot_drive = DriveSubsystem(self.gyro)
         self.fuel = intakeSubsystem()
         self.fuelUpDown = intakeUpDownSubsystem()
         # self.nosub = turretHorizontalMotorSubsystem()
         # self.yessub = turretVerticalMotorSubsystem()
+        self.elevator = elevatorSubsystem()
+
+        # Command groups
+        
+        self.elevatorFloorToRungCommand = commands2.SequentialCommandGroup(
+            # Assume we start at BOTTOM
+            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
+            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
+            # changeThrobberErectionCommand(self.elevator, erect=True),
+        )
 
         # controller 
         self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
@@ -52,7 +65,7 @@ class RobotContainer:
                         self.driverController.getRightX(), OIConstants.kDriveDeadband
                     ),
                     fieldRelative=True,
-                    rateLimit=False,
+                    rateLimit=True,
                 ),
                 self.robot_drive,
             )
@@ -73,11 +86,14 @@ class RobotContainer:
         # self.driverController.povDown().whileTrue(shooterYuhHuhCommand(self.yessub, -0.05))
         # self.driverController.povUp().whileTrue(shooterYuhHuhCommand(self.yessub, 0.05))
 
-        # reset_gyro = commands2.InstantCommand(
-        #     lambda: self.robot_drive.gyro.reset(),
-        #     self.robot_drive
-        # )
+        reset_gyro = commands2.InstantCommand(
+            lambda: self.robot_drive.gyro.reset(),
+            self.robot_drive
+        )
+        self.driverController.x().onTrue(reset_gyro)
         self.driverController.a().onTrue(fuelEatCommand(self.fuel))
+        self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
 
     def getAutonomousCommand(self) -> commands2.Command:
-        return commands2.InstantCommand(lambda: None)
+        return self.elevatorFloorToRungCommand
+        # return commands2.InstantCommand(lambda: None)

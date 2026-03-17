@@ -1,3 +1,4 @@
+import json
 import commands2
 from ntcore import NetworkTableInstance
 
@@ -19,24 +20,10 @@ class turretCameraSubsystem(commands2.Subsystem):
 
         self.botpose = self.table.getFloatArrayTopic("botpose").subscribe([0.0] * 6) # gets x, y, z coordinates (supposedly?) and field rotation... idk ask gemini.
 
-    # ok so this one takes our valid target thing and turns it into a true/false
-    def has_target(self) -> bool:
-        return self.tv.get() == 1
-
-    # how far left/right is the crosshair
-    def get_horizontal_offset(self) -> float:
-        return self.tx.get()
+    def get_raw_data(self):
+        j = self.table.getString("json")
+        data = json.loads(j)
+        print(data)
     
-    # how far up/down is the crosshair
-    def get_vertical_offset(self) -> float:
-        return self.ty.get()
-
-    # what is the latency in seconds
-    def get_total_latency(self) -> float:
-        return (self.tl.get() + self.cl.get()) / 1000.0
-
-    # gets x, y, z, yaw, pitch, and roll in field coordinates
-    def get_robot_pose(self):
-        return self.botpose.get()
-    
-    # ask claire abt the rest... ummm
+    def periodic(self) -> str:
+        print(self.get_raw_data())

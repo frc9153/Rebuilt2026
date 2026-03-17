@@ -8,7 +8,7 @@ class intakeSubsystem(commands2.Subsystem):
         super().__init__()
 
         self.motor = rev.SparkMax(
-            fuelConstants.FUEL_MOTOR,rev.SparkLowLevel.MotorType.kBrushless
+            fuelConstants.FUEL_MOTOR, rev.SparkLowLevel.MotorType.kBrushless
         )
 
         config = rev.SparkMaxConfig()

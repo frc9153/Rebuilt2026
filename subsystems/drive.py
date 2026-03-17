@@ -1,9 +1,11 @@
 import math
 import typing
 
+import ntcore
 import wpilib 
 
 from commands2 import Subsystem
+import wpimath
 from wpimath.filter import SlewRateLimiter
 from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
@@ -120,107 +122,77 @@ class DriveSubsystem(Subsystem):
         fieldRelative: bool,
         rateLimit: bool,
     ) -> None:
-        """Method to drive the robot using joystick info.
-
-        :param xSpeed:        Speed of the robot in the x direction (forward).
-        :param ySpeed:        Speed of the robot in the y direction (sideways).
-        :param rot:           Angular rate of the robot.
-        :param fieldRelative: Whether the provided x and y speeds are relative to the
-                              field.
-        :param rateLimit:     Whether to enable rate limiting for smoother control.
         """
-
-        xSpeedCommanded = xSpeed
-        ySpeedCommanded = ySpeed
+        Method to drive the robot using joystick info.
+        :param xSpeed: Speed of the robot in the x direction (forward).
+        :param ySpeed: Speed of the robot in the y direction (sideways).
+        :param rot: Angular rate of the robot.
+        :param fieldRelative: Whether the provided x and y speeds are relative to the field.
+        :param rateLimit: Whether to enable rate limiting for smoother control
+        :param periodSeconds: Time
+        """
+        xSpeedCommanded = None
+        ySpeedCommanded = None
+        
+        # print(f"xSpeed {xSpeed}, ySpeed: {ySpeed}, rot: {rot}")
 
         if rateLimit:
             # Convert XY to polar for rate limiting
             inputTranslationDir = math.atan2(ySpeed, xSpeed)
-            inputTranslationMag = math.hypot(xSpeed, ySpeed)
+            inputTranslationMag = math.sqrt(pow(xSpeed, 2) + pow(ySpeed, 2))
 
-            # Calculate the direction slew rate based on an estimate of the lateral acceleration
+            # Calculate the direction slew rate based on an estimate of lateral acceleration
+            directionSlewRate = None
             if self.currentTranslationMag != 0.0:
-                directionSlewRate = abs(
-                    DriveConstants.kDirectionSlewRate / self.currentTranslationMag
-                )
+                directionSlewRate = abs(DriveConstants.kDirectionSlewRate / self.currentTranslationMag)
             else:
-                directionSlewRate = 500.0
-                # some high number that means the slew rate is effectively instantaneous
-
-            currentTime = wpilib.Timer.getFPGATimestamp()
+                directionSlewRate = 500.0 # some high number that means the slew rate is effectively instantaneous
+            
+            currentTime = ntcore._now() * pow(1, -6)
             elapsedTime = currentTime - self.prevTime
-            angleDif = swerveutils.angleDifference(
-                inputTranslationDir, self.currentTranslationDir
-            )
-            if angleDif < 0.45 * math.pi:
-                self.currentTranslationDir = swerveutils.stepTowardsCircular(
-                    self.currentTranslationDir,
-                    inputTranslationDir,
-                    directionSlewRate * elapsedTime,
-                )
-                self.currentTranslationMag = self.magLimiter.calculate(
-                    inputTranslationMag
-                )
+            angleDif = swerveutils.angleDifference(inputTranslationDir, self.currentTranslationDir)
 
+            if angleDif < 0.45 * math.pi:
+                self.currentTranslationDir = swerveutils.stepTowardsCircular(self.currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime)
+                self.currentTranslationMag = self.magLimiter.calculate(inputTranslationMag)
             elif angleDif > 0.85 * math.pi:
-                # some small number to avoid floating-point errors with equality checking
-                # keep currentTranslationDir unchanged
                 if self.currentTranslationMag > 1e-4:
                     self.currentTranslationMag = self.magLimiter.calculate(0.0)
                 else:
-                    self.currentTranslationDir = swerveutils.wrapAngle(
-                        self.currentTranslationDir + math.pi
-                    )
-                    self.currentTranslationMag = self.magLimiter.calculate(
-                        inputTranslationMag
-                    )
-
+                    self.currentTranslationDir = swerveutils.wrapAngle(self.currentTranslationDir + math.pi)
+                    self.currentTranslationMag = self.magLimiter.calculate(inputTranslationMag)
             else:
-                self.currentTranslationDir = swerveutils.stepTowardsCircular(
-                    self.currentTranslationDir,
-                    inputTranslationDir,
-                    directionSlewRate * elapsedTime,
-                )
+                self.currentTranslationDir = swerveutils.stepTowardsCircular(self.currentTranslationDir, inputTranslationDir, directionSlewRate * elapsedTime)
                 self.currentTranslationMag = self.magLimiter.calculate(0.0)
-
+            
             self.prevTime = currentTime
 
-            xSpeedCommanded = self.currentTranslationMag * math.cos(
-                self.currentTranslationDir
-            )
-            ySpeedCommanded = self.currentTranslationMag * math.sin(
-                self.currentTranslationDir
-            )
+            xSpeedCommanded = self.currentTranslationMag * math.cos(self.currentTranslationDir)
+            ySpeedCommanded = self.currentTranslationMag * math.sin(self.currentTranslationDir)
             self.currentRotation = self.rotLimiter.calculate(rot)
+        else:
+            xSpeedCommanded = xSpeed
+            ySpeedCommanded = ySpeed
+            self.currentRotation = rot
 
-        # else:
-        self.currentRotation = rot
-
-        # Convert the commanded speeds into the correct units for the drivetrain
-        xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond
-        ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond
+        # Convert the commanded speeds into correct units for the drivetrain
+        xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeed
+        ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeed
         rotDelivered = self.currentRotation * DriveConstants.kMaxAngularSpeed
 
-        # print(f"XSpeed {xSpeedDelivered} ({xSpeed}), YSpeed: {ySpeedCommanded} ({ySpeed}), Rot: {rotDelivered}")
-
-        swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromFieldRelativeSpeeds(
-                xSpeedDelivered,
-                ySpeedDelivered,
-                rotDelivered,
-                Rotation2d.fromDegrees(self.gyro.getAngle()),
-            )
-            if fieldRelative
-            else ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)
-        )
-        fl, fr, rl, rr = SwerveDrive4Kinematics.desaturateWheelSpeeds(
-            swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond
+        (fl, fr, bl, br) = DriveConstants.kDriveKinematics.toSwerveModuleStates(
+            wpimath.kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(
+                xSpeedDelivered, ySpeedDelivered, rotDelivered, self.gyro.getRotation2d()#wpimath.geometry.Rotation2d(wpimath.units.degreesToRadians(self.gyro.getAngle()))
+            ) if fieldRelative 
+            else wpimath.kinematics.ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered)
         )
 
+
+        # Set the swerve modules to desired states
         self.frontLeft.set_desired_state(fl)
         self.frontRight.set_desired_state(fr)
-        self.rearLeft.set_desired_state(rl)
-        self.rearRight.set_desired_state(rr)
+        self.rearLeft.set_desired_state(bl)
+        self.rearRight.set_desired_state(br)
 
     def setX(self) -> None:
         """Sets the wheels into an X formation to prevent movement."""

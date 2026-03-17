@@ -64,6 +64,7 @@ class MAXSwerveModule:
         # Invert the turning encoder, since the output shaft rotates in the opposite direction of
         # the steering motor in the MAXSwerve Module.
         self.turning_config.absoluteEncoder.inverted(ModuleConstants.kTurningEncoderInverted)
+        self.driving_config.absoluteEncoder.inverted(False)
 
         # Enable PID wrap around for the turning motor. This will allow the PID
         # controller to go through 0 to get to the setpoint i.e. going from 350 degrees
