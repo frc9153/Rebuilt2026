@@ -65,6 +65,7 @@ class RobotContainer:
 
         # controller 
         self.driverController = commands2.button.CommandXboxController(OIConstants.kDriverControllerPort)
+        self.operatorController = commands2.button.CommandXboxController(OIConstants.kOperatorControllerPort)
 
         # configure button bindings
         self.configureButtonBindings()
@@ -110,19 +111,20 @@ class RobotContainer:
             self.robot_drive
         )
 
-        self.driverController.povUp().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_TOP))
-        self.driverController.povLeft().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE))
-        self.driverController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
+        self.operatorController.povUp().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_TOP))
+        self.operatorController.povLeft().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE))
+        self.operatorController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
 
-        self.driverController.leftBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_90))
-        self.driverController.rightBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_60))
+        self.operatorController.leftBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_90))
+        self.operatorController.rightBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_60))
 
-        self.driverController.rightTrigger().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
-        self.driverController.leftTrigger().whileTrue(indexerPukeCommand(self.indexer))
-        self.driverController.povRight().whileTrue(indexerReversePukeCommand(self.indexer))
+        self.operatorController.rightTrigger().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
+        self.operatorController.leftTrigger().whileTrue(indexerPukeCommand(self.indexer))
+
+        self.operatorController.y().whileTrue(indexerReversePukeCommand(self.indexer))
+        self.operatorController.a().whileTrue(fuelEatCommand(self.fuelIntake))
 
         self.driverController.x().onTrue(reset_gyro)
-        self.driverController.a().whileTrue(fuelEatCommand(self.fuelIntake))
         self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
 
     def getAutonomousCommand(self) -> commands2.Command:
