@@ -126,7 +126,7 @@ class turretMotorConstants:
     TURRET_HORIZONTAL_MOTOR = 13
 
     TURRET_SHOOT_MOTOR_ONE = 16
-    TURRET_SHOOT_MOTOR_TWO = 17  # ?????????? WHAT IS IT??? Curse You Claire Curse You
+    TURRET_SHOOT_MOTOR_TWO = 17  
 
     TURRET_SHOOT_POWER = 0.4
 
@@ -136,8 +136,10 @@ class turretMotorConstants:
 class fuelConstants:
     EAT_POWER = 1.0
 
-    FUEL_UP_DOWN_SETPOINT_BOTTOM = 0.528
-    FUEL_UP_DOWN_SETPOINT_TOP = 0.7
+    
+    FUEL_UP_DOWN_SETPOINT_BOTTOM = 0.52
+    FUEL_UP_DOWN_SETPOINT_MIDDLE = .564
+    FUEL_UP_DOWN_SETPOINT_TOP = 0.696
 
     FUEL_UP_DOWN_MOTOR = 14
     FUEL_MOTOR = 9

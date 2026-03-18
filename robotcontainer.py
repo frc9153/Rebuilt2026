@@ -16,6 +16,7 @@ from commands.elevateToPoint import elevateToPointCommand
 from commands.fuelEat import fuelEatCommand
 from commands.fuelUpDown import fuelUpDownCommand
 from commands.indexerPuke import indexerPukeCommand
+from commands.indexerReversePuke import indexerReversePukeCommand 
 from commands.shooterShoot import shooterShootCommand
 from constants import OIConstants, elevatorConstants, fuelConstants, turretMotorConstants
 from commands.driveCommand import DriveCommand
@@ -45,6 +46,8 @@ class RobotContainer:
         self.elevator = elevatorSubsystem()
 
         # Command groups
+
+        self.shooterYuhHuhCommand = shooterYuhHuhCommand(self.shooter, 0.1)
         
         self.elevatorFloorToRungCommand = commands2.SequentialCommandGroup(
             # Assume we start at BOTTOM
@@ -102,12 +105,17 @@ class RobotContainer:
         )
 
         self.driverController.povUp().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_TOP))
+        self.driverController.povLeft().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE))
         self.driverController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
 
-        self.driverController.rightBumper().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
+        self.driverController.leftBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_90))
+        self.driverController.rightBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_60))
+
+        self.driverController.rightTrigger().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
+        self.driverController.leftTrigger().whileTrue(indexerPukeCommand(self.indexer))
+        self.driverController.povRight().whileTrue(indexerReversePukeCommand(self.indexer))
 
         self.driverController.x().onTrue(reset_gyro)
-        self.driverController.y().whileTrue(indexerPukeCommand(self.indexer))
         self.driverController.a().whileTrue(fuelEatCommand(self.fuelIntake))
         self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
 

@@ -14,7 +14,7 @@ class fuelUpDownSubsystem(commands2.Subsystem):
         config = rev.SparkMaxConfig()
         config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         config.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
-        config.closedLoop.pid(2.0, 0.0, 0.0)
+        config.closedLoop.pid(1.0, 0.0, 0.0)
 
         self.motor.configure(
             config,
@@ -36,5 +36,5 @@ class fuelUpDownSubsystem(commands2.Subsystem):
     def isAt(self, point: float) -> bool:
         position = self.encoder.getPosition()
         delta = abs(position - point)
-        done = delta < 0.01
+        done = delta < 0.02
         return done
