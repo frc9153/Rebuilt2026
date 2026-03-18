@@ -31,6 +31,7 @@ from subsystems.turretVerticalMotor import turretVerticalMotorSubsystem
 from subsystems.turretHorizontalMotor import turretHorizontalMotorSubsystem
 from commands.shooterLeftRight import shooterNuhUhCommand
 from commands.shooterUpDown import shooterYuhHuhCommand
+from commands.autoRoutine import autoRoutine
 
 class RobotContainer:
     def __init__(self) -> None:
@@ -44,6 +45,11 @@ class RobotContainer:
         # self.nosub = turretHorizontalMotorSubsystem()
         # self.yessub = turretVerticalMotorSubsystem()
         self.elevator = elevatorSubsystem()
+        self.autoCommand = autoRoutine(
+            self.shooter,
+            self.indexer,
+            self.elevator
+        )
 
         # Command groups
 
@@ -120,5 +126,4 @@ class RobotContainer:
         self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
 
     def getAutonomousCommand(self) -> commands2.Command:
-        return self.elevatorFloorToRungCommand
-        # return commands2.InstantCommand(lambda: None)
+        return self.autoCommand

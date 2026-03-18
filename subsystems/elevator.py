@@ -40,7 +40,7 @@ class elevatorSubsystem(commands2.Subsystem):
         self.throb_motor = rev.SparkMax(
             elevatorConstants.THROB_MOTOR, rev.SparkLowLevel.MotorType.kBrushless
         )
-        self.throbber_pid_controller = self.elevator_motor_one.getClosedLoopController()
+        self.throbber_pid_controller = self.throb_motor.getClosedLoopController()
         config_throb = rev.SparkMaxConfig()
         config_throb.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         config_throb.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
@@ -54,7 +54,7 @@ class elevatorSubsystem(commands2.Subsystem):
         )
     
     def setThrobberSetpoint(self, point: float):
-        self.throbber_pid_controller.setSetpoint(point, rev.SparkLowLevel.ControlType.kPosition)
+        self.throbber_pid_controller.setReference(point, rev.SparkLowLevel.ControlType.kPosition)
     
     def isThrobberAtPoint(self, point: float) -> bool:
         position = self.throbber_encoder.getPosition()
@@ -63,7 +63,7 @@ class elevatorSubsystem(commands2.Subsystem):
         return done
 
     def setElevatorSetpoint(self, point: float):
-        self.elevator_pid_controller.setSetpoint(point, rev.SparkLowLevel.ControlType.kPosition)
+        self.elevator_pid_controller.setReference(point, rev.SparkLowLevel.ControlType.kPosition)
 
     def isElevatorAt(self, point: float) -> bool:
         position = self.elevator_encoder.getPosition()
