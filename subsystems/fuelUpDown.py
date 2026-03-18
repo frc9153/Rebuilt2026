@@ -3,7 +3,7 @@ import rev
 
 from constants import fuelConstants
 
-class intakeUpDownSubsystem(commands2.Subsystem):
+class fuelUpDownSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
 
@@ -13,15 +13,28 @@ class intakeUpDownSubsystem(commands2.Subsystem):
 
         config = rev.SparkMaxConfig()
         config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
-
-        # config.voltageCompensation(12)
-        # config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT)
+        config.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
+        config.closedLoop.pid(2.0, 0.0, 0.0)
 
         self.motor.configure(
             config,
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
+        
+        self.pid = self.motor.getClosedLoopController()
+        self.encoder = self.motor.getAbsoluteEncoder()
+        self.setpoint = 0.0
     
-    def setIntake(self, voltage: float) -> None:
-        self.motor.setVoltage(voltage)
+    def setPower(self, speed: float) -> None:
+        self.motor.set(speed)
+    
+    def setSetpoint(self, point: float):
+        self.setpoint = point
+        self.pid.setSetpoint(point, rev.SparkLowLevel.ControlType.kPosition)
+
+    def isAt(self, point: float) -> bool:
+        position = self.encoder.getPosition()
+        delta = abs(position - point)
+        done = delta < 0.01
+        return done

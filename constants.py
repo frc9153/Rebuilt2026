@@ -22,6 +22,7 @@ class NeoMotorConstants:
 class DriveConstants:
     # Driving Parameters - Note that these are not the maximum capable speeds of
     # the robot, rather the allowed maximum speeds
+    # Original: 4.8
     kMaxSpeed = 4.8
     kMaxAngularSpeed = (math.tau) * 0.5  # radians per second
 
@@ -127,21 +128,31 @@ class turretMotorConstants:
     TURRET_SHOOT_MOTOR_ONE = 16
     TURRET_SHOOT_MOTOR_TWO = 17  # ?????????? WHAT IS IT??? Curse You Claire Curse You
 
+    TURRET_SHOOT_POWER = 0.4
+
+    TURRET_ANGLE_90 = 0.975
+    TURRET_ANGLE_60 = 0.902
+
 class fuelConstants:
-    EAT_POWER = 0.5
+    EAT_POWER = 1.0
+
+    FUEL_UP_DOWN_SETPOINT_BOTTOM = 0.528
+    FUEL_UP_DOWN_SETPOINT_TOP = 0.7
 
     FUEL_UP_DOWN_MOTOR = 14
     FUEL_MOTOR = 9
 
 class elevatorConstants:
-    ELEVATOR_POWER = 0.1
     ELEVATOR_MOTOR_ONE = 10
     ELEVATOR_MOTOR_TWO = 12
 
     ELEVATOR_SETPOINT_BOTTOM = 0.0
     ELEVATOR_SETPOINT_TOP = 175.0
 
-    THROB_POWER = 0.5
     THROB_MOTOR = 11
-    THROBBER_SETPOINT_ERECT = 0.316
-    THROBBER_SETPOINT_NOT_ERECT = 0.0
+    THROBBER_SETPOINT_ERECT = 0.5
+    THROBBER_SETPOINT_NOT_ERECT = 0.395
+
+class indexerConstants:
+    INDEXER_POWER = 1.0
+    INDEXER_MOTOR = 15

@@ -14,12 +14,18 @@ import navx
 from commands.changeThrobberErection import changeThrobberErectionCommand
 from commands.elevateToPoint import elevateToPointCommand
 from commands.fuelEat import fuelEatCommand
-from constants import OIConstants, elevatorConstants
+from commands.fuelUpDown import fuelUpDownCommand
+from commands.indexerPuke import indexerPukeCommand
+from commands.shooterShoot import shooterShootCommand
+from constants import OIConstants, elevatorConstants, fuelConstants, turretMotorConstants
 from commands.driveCommand import DriveCommand
 from subsystems.drive import DriveSubsystem
 from subsystems.elevator import elevatorSubsystem
 from subsystems.fuelConsumer import intakeSubsystem
-from subsystems.fuelUpDown import intakeUpDownSubsystem
+from subsystems.fuelUpDown import fuelUpDownSubsystem
+from subsystems.indexer import indexerSubsystem
+from subsystems.turretCamera import turretCameraSubsystem
+from subsystems.turretShootMotor import turretShootMotorSubsystem
 from subsystems.turretVerticalMotor import turretVerticalMotorSubsystem
 from subsystems.turretHorizontalMotor import turretHorizontalMotorSubsystem
 from commands.shooterLeftRight import shooterNuhUhCommand
@@ -29,8 +35,11 @@ class RobotContainer:
     def __init__(self) -> None:
         self.gyro = navx.AHRS.create_spi()
         self.robot_drive = DriveSubsystem(self.gyro)
-        self.fuel = intakeSubsystem()
-        self.fuelUpDown = intakeUpDownSubsystem()
+        self.fuelIntake = intakeSubsystem()
+        self.indexer = indexerSubsystem()
+        self.fuelUpDown = fuelUpDownSubsystem()
+        self.shooter = turretShootMotorSubsystem()
+        # self.limelight = turretCameraSubsystem()
         # self.nosub = turretHorizontalMotorSubsystem()
         # self.yessub = turretVerticalMotorSubsystem()
         self.elevator = elevatorSubsystem()
@@ -39,9 +48,10 @@ class RobotContainer:
         
         self.elevatorFloorToRungCommand = commands2.SequentialCommandGroup(
             # Assume we start at BOTTOM
-            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
-            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
-            # changeThrobberErectionCommand(self.elevator, erect=True),
+            # elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
+            # elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
+            changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_NOT_ERECT),
+            changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_ERECT),
         )
 
         # controller 
@@ -90,8 +100,15 @@ class RobotContainer:
             lambda: self.robot_drive.gyro.reset(),
             self.robot_drive
         )
+
+        self.driverController.povUp().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_TOP))
+        self.driverController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
+
+        self.driverController.rightBumper().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
+
         self.driverController.x().onTrue(reset_gyro)
-        self.driverController.a().onTrue(fuelEatCommand(self.fuel))
+        self.driverController.y().whileTrue(indexerPukeCommand(self.indexer))
+        self.driverController.a().whileTrue(fuelEatCommand(self.fuelIntake))
         self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
 
     def getAutonomousCommand(self) -> commands2.Command:

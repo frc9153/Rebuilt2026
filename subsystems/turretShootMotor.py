@@ -15,21 +15,23 @@ class turretShootMotorSubsystem(commands2.Subsystem):
             turretMotorConstants.TURRET_SHOOT_MOTOR_TWO, rev.SparkLowLevel.MotorType.kBrushless
         )
         
-        config = rev.SparkMaxConfig()
+        config_one = rev.SparkMaxConfig()
         # config.voltageCompensation(12)
         # config.smartCurrentLimit(DriveConstants.DRIVE_MOTOR_CURRENT_LIMIT)
         
         self.motor_one.configure(
-            config,
+            config_one,
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
+
+        config_two = rev.SparkMaxConfig()
+        config_two.follow(turretMotorConstants.TURRET_SHOOT_MOTOR_ONE, invert=True)
         self.motor_two.configure(
-            config,
+            config_two,
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
     
-    def setMotorSpeed(self, speed):
+    def setPower(self, speed):
         self.motor_one.set(speed)
-        self.motor_two.set(-speed)

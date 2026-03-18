@@ -9,13 +9,13 @@ class shooterShootCommand(commands2.Command):
         self.speed = speed
 
     def initialize(self):
-        self.shootsub.setMotorSpeed(self.speed)
+        self.shootsub.setPower(self.speed)
 
     def execute(self):
         pass
 
     def end(self, interrupted):
-        self.shootsub.setMotorSpeed(0)
+        self.shootsub.setPower(0)
 
     def isFinished(self):
         return False

@@ -1,14 +1,15 @@
 import commands2
 
 from subsystems.elevator import elevatorSubsystem
+from subsystems.fuelUpDown import fuelUpDownSubsystem
 
-class changeThrobberErectionCommand(commands2.Command):
-    def __init__(self, subsystem: elevatorSubsystem, point: float):
+class fuelUpDownCommand(commands2.Command):
+    def __init__(self, subsystem: fuelUpDownSubsystem, point: float):
         self.subsystem = subsystem
         self.point = point
 
     def initialize(self):
-        self.subsystem.setThrobberSetpoint(self.point)
+        self.subsystem.setSetpoint(self.point)
 
     def execute(self):
         pass
@@ -17,4 +18,4 @@ class changeThrobberErectionCommand(commands2.Command):
         pass
 
     def isFinished(self):
-        return self.subsystem.isThrobberAtPoint(self.point)
+        return self.subsystem.isAt(self.point)

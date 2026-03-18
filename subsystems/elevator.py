@@ -18,7 +18,7 @@ class elevatorSubsystem(commands2.Subsystem):
         config_one = rev.SparkMaxConfig()
         config_one.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         config_one.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kPrimaryEncoder)
-        config_one.closedLoop.pid(10.0, 0.0, 0.0)
+        config_one.closedLoop.pid(1.0, 0.0, 0.0)
         # config_one.closedLoop.maxMotion.cruiseVelocity(elevatorConstants.ELEVATOR_POWER)
         self.elevator_motor_one.configure(
             config_one,
@@ -43,26 +43,26 @@ class elevatorSubsystem(commands2.Subsystem):
         self.throbber_pid_controller = self.elevator_motor_one.getClosedLoopController()
         config_throb = rev.SparkMaxConfig()
         config_throb.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
-        config_throb.closedLoop.pid(0.1, 0.0, 0.0)
-        config_throb.closedLoop.maxMotion.cruiseVelocity(elevatorConstants.THROB_POWER)
+        config_throb.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
+        config_throb.closedLoop.pid(15.0, 0.0, 0.0)
+
+        self.throbber_encoder = self.throb_motor.getAbsoluteEncoder()
         self.throb_motor.configure(
             config_throb,
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
     
-    def setThrobberErect(self, erect: bool):
-        self.throbber_pid_controller.setSetpoint(
-            elevatorConstants.THROBBER_SETPOINT_ERECT if erect
-            else elevatorConstants.THROBBER_SETPOINT_NOT_ERECT,
-            rev.SparkLowLevel.ControlType.kPosition
-        )
+    def setThrobberSetpoint(self, point: float):
+        self.throbber_pid_controller.setSetpoint(point, rev.SparkLowLevel.ControlType.kPosition)
     
-    def isThrobberDone(self) -> bool:
-        return self.throbber_pid_controller.isAtSetpoint()
+    def isThrobberAtPoint(self, point: float) -> bool:
+        position = self.throbber_encoder.getPosition()
+        delta = abs(position - point)
+        done = delta < 0.01
+        return done
 
     def setElevatorSetpoint(self, point: float):
-        self.elevator_setpoint = point
         self.elevator_pid_controller.setSetpoint(point, rev.SparkLowLevel.ControlType.kPosition)
 
     def isElevatorAt(self, point: float) -> bool:
