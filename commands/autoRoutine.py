@@ -2,10 +2,12 @@ import commands2
 from commands.shooterShoot import shooterShootCommand
 from commands.indexerPuke import indexerPukeCommand
 from commands.elevateToPoint import elevateToPointCommand
+from commands.fuelUpDown import fuelUpDownCommand
 from subsystems.turretShootMotor import turretShootMotorSubsystem
 from subsystems.indexer import indexerSubsystem
 from subsystems.elevator import elevatorSubsystem
-from constants import turretMotorConstants, elevatorConstants
+from subsystems.fuelUpDown import fuelUpDownSubsystem
+from constants import turretMotorConstants, elevatorConstants, fuelConstants
 
 class autoRoutine(commands2.SequentialCommandGroup):
     def __init__(
@@ -13,10 +15,15 @@ class autoRoutine(commands2.SequentialCommandGroup):
         shooter: turretShootMotorSubsystem,
         indexer: indexerSubsystem,
         elevator: elevatorSubsystem,
+        fuel: fuelUpDownSubsystem
     ):
         super().__init__()
 
         self.addCommands(
+
+            # puts intake to middle
+            fuelUpDownCommand(fuel, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE),
+
             # spins da shooter until up 2 speed
             shooterShootCommand(shooter, turretMotorConstants.TURRET_SHOOT_POWER)
                 .withTimeout(1.0),

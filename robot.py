@@ -11,6 +11,9 @@ import hal
 import commands2
 
 import robotcontainer
+import wpilib
+from wpilib import SmartDashboard
+from commands.autoRoutine import autoRoutine
 
 
 class MyRobot(commands2.TimedCommandRobot):
@@ -20,18 +23,19 @@ class MyRobot(commands2.TimedCommandRobot):
     """
 
     def robotInit(self) -> None:
+        self.container = robotcontainer.RobotContainer()
         self.autonomousCommand: typing.Optional[commands2.Command] = None
 
-        # Instantiate our RobotContainer. This will perform all our button bindings,
-        # and put our autonomous chooser on the dashboard.
-        self.container = robotcontainer.RobotContainer()
+        self.chooser = wpilib.SendableChooser()
+        self.chooser.setDefaultOption("Basic Auto", self.container.autoCommand)
+
+        SmartDashboard.putData("Autonomous Mode", self.chooser)
 
         # Used to track usage of Kitbot code, please do not remove.
         hal.report(hal.tResourceType.kResourceType_Framework, 10)
 
     def autonomousInit(self) -> None:
-        self.autonomousCommand = self.container.getAutonomousCommand()
-
+        self.autonomousCommand = self.chooser.getSelected()
         # schedule the autonomous command (example)
         if self.autonomousCommand is not None:
             self.autonomousCommand.schedule()

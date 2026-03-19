@@ -48,7 +48,8 @@ class RobotContainer:
         self.autoCommand = autoRoutine(
             self.shooter,
             self.indexer,
-            self.elevator
+            self.elevator,
+            self.fuelUpDown
         )
 
         # Command groups

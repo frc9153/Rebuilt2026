@@ -44,7 +44,7 @@ class fuelUpDownSubsystem(commands2.Subsystem):
         self.pid.setReference(
             point,
             rev.SparkLowLevel.ControlType.kPosition,
-            0,
+            rev.ClosedLoopSlot.kSlot0,
             arb_ff
         )
 
