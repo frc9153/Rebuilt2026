@@ -9,21 +9,20 @@ class shooterYuhHuhCommand(commands2.Command):
         self.y_speed = y_speed
         self.addRequirements(yessub)
 
-
     def initialize(self):
         self.yessub.setMotorSpeed(self.y_speed)
 
     def execute(self):
         angle = self.yessub.getAbsolutePosition()
         if self.y_speed > 0 and angle >= turretMotorConstants.TURRET_ANGLE_90:
-            self.yessub.setMotorSpeed(0)  # hit top limit, stop
+            self.yessub.setMotorSpeed(0)
         elif self.y_speed < 0 and angle <= turretMotorConstants.TURRET_ANGLE_60:
-            self.yessub.setMotorSpeed(0)  # hit bottom limit, stop
+            self.yessub.setMotorSpeed(0)
         else:
-            self.yessub.setMotorSpeed(self.y_speed)  
+            self.yessub.setMotorSpeed(self.y_speed)
 
     def end(self, interrupted):
-        self.yessub.setMotorSpeed(0)
+        self.yessub.holdPosition(self.yessub.getAbsolutePosition())
 
     def isFinished(self):
-        return False  
+        return False
