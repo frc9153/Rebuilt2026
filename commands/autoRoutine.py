@@ -34,7 +34,7 @@ class autoRoutine(commands2.SequentialCommandGroup):
             commands2.ParallelCommandGroup(
                 shooterShootCommand(shooter, turretMotorConstants.TURRET_SHOOT_POWER),
                 indexerPukeCommand(indexer),
-            ).withTimeout(5.0),
+            ).withTimeout(15.0),
 
             # L1 climb
             # elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
