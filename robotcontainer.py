@@ -32,6 +32,7 @@ from subsystems.turretHorizontalMotor import turretHorizontalMotorSubsystem
 from commands.shooterLeftRight import shooterNuhUhCommand
 from commands.shooterUpDown import shooterYuhHuhCommand
 from commands.autoRoutine import autoRoutine
+from commands.holdShooter import holdShooterAngleCommand
 
 class RobotContainer:
     def __init__(self) -> None:
@@ -44,6 +45,7 @@ class RobotContainer:
         # self.limelight = turretCameraSubsystem()
         # self.nosub = turretHorizontalMotorSubsystem()
         self.yessub = turretVerticalMotorSubsystem()
+        self.yessub.setDefaultCommand(holdShooterAngleCommand(self.yessub))
         self.elevator = elevatorSubsystem()
         self.autoCommand = autoRoutine(
             self.shooter,
