@@ -58,10 +58,10 @@ class RobotContainer:
         
         self.elevatorFloorToRungCommand = commands2.SequentialCommandGroup(
             # Assume we start at BOTTOM
-            # elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
-            # elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
-            changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_NOT_ERECT),
-            changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_ERECT),
+            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
+            elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
+            # changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_NOT_ERECT),
+            # changeThrobberErectionCommand(self.elevator, elevatorConstants.THROBBER_SETPOINT_ERECT),
         )
 
         # controller 
