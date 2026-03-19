@@ -118,8 +118,8 @@ class RobotContainer:
         self.operatorController.povLeft().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE))
         self.operatorController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
 
-        self.operatorController.leftBumper().onTrue(shooterYuhHuhCommand(self.yessub, turretMotorConstants.TURRET_VERTICAL_SPEED))
-        self.operatorController.rightBumper().onTrue(shooterYuhHuhCommand(self.yessub, -turretMotorConstants.TURRET_VERTICAL_SPEED))
+        self.operatorController.leftBumper().whileTrue(shooterYuhHuhCommand(self.yessub, turretMotorConstants.TURRET_VERTICAL_SPEED))
+        self.operatorController.rightBumper().whileTrue(shooterYuhHuhCommand(self.yessub, -turretMotorConstants.TURRET_VERTICAL_SPEED))
 
         self.operatorController.leftTrigger().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
         self.operatorController.rightTrigger().whileTrue(indexerPukeCommand(self.indexer))

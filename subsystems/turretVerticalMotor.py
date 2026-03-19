@@ -12,7 +12,7 @@ class turretVerticalMotorSubsystem(commands2.Subsystem):
         config = rev.SparkMaxConfig()
         config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         config.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
-        config.closedLoop.pid(3.0, 0.0, 0.0)
+        config.closedLoop.pid(0.5, 0.0, 0.0)
         self.motor.configure(
             config,
             rev.ResetMode.kResetSafeParameters,
