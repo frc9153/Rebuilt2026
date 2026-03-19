@@ -14,7 +14,7 @@ class fuelUpDownSubsystem(commands2.Subsystem):
         config = rev.SparkMaxConfig()
         config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         config.closedLoop.setFeedbackSensor(rev.FeedbackSensor.kAbsoluteEncoder)
-        config.closedLoop.pid(3.0, 0.002, 0.1)
+        config.closedLoop.pid(2.0, 0.002, 0.1)
 
         config.closedLoop.IZone(0.05) # makes it so the I only kicks in when close 
         config.closedLoop.outputRange(-0.5, 0.5) # caps output so no slamming

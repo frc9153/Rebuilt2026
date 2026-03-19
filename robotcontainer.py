@@ -126,7 +126,8 @@ class RobotContainer:
         self.operatorController.a().whileTrue(fuelEatCommand(self.fuelIntake))
 
         self.driverController.x().onTrue(reset_gyro)
-        self.driverController.b().onTrue(self.elevatorFloorToRungCommand)
+        self.driverController.b().onTrue(elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM))
+        self.driverController.y().onTrue(elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.autoCommand
