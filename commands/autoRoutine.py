@@ -14,12 +14,14 @@ class autoRoutine(commands2.SequentialCommandGroup):
         self,
         shooter: turretShootMotorSubsystem,
         indexer: indexerSubsystem,
-        elevator: elevatorSubsystem,
+        # elevator: elevatorSubsystem,
         fuel: fuelUpDownSubsystem
     ):
         super().__init__()
 
         self.addCommands(
+            fuelUpDownCommand(fuel,fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM)
+                .withTimeout(1.0),
 
             # puts intake to middle
             fuelUpDownCommand(fuel, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE),
@@ -35,5 +37,5 @@ class autoRoutine(commands2.SequentialCommandGroup):
             ).withTimeout(5.0),
 
             # L1 climb
-            elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
+            # elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
         )

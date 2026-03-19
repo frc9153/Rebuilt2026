@@ -14,6 +14,7 @@ class turretVerticalMotorSubsystem(commands2.Subsystem):
         self.abs_encoder = self.motor.getAbsoluteEncoder()
         
         config = rev.SparkMaxConfig()
+        config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
         
         self.motor.configure(
             config,

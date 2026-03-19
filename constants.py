@@ -23,7 +23,7 @@ class DriveConstants:
     # Driving Parameters - Note that these are not the maximum capable speeds of
     # the robot, rather the allowed maximum speeds
     # Original: 4.8
-    kMaxSpeed = 4.8
+    kMaxSpeed = 3.7
     kMaxAngularSpeed = (math.tau) * 0.5  # radians per second
 
     kDirectionSlewRate = 1.2  # radians per second
@@ -129,12 +129,12 @@ class turretMotorConstants:
     TURRET_SHOOT_MOTOR_ONE = 16
     TURRET_SHOOT_MOTOR_TWO = 17  
 
-    TURRET_SHOOT_POWER = 0.4
+    TURRET_SHOOT_POWER = 0.35
 
     TURRET_ANGLE_90 = 0.975
     TURRET_ANGLE_60 = 0.902
 
-    TURRET_VERTICAL_SPEED = 0.2``
+    TURRET_VERTICAL_SPEED = 0.05
 
 class fuelConstants:
     EAT_POWER = 1.0

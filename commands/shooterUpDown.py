@@ -9,6 +9,7 @@ class shooterYuhHuhCommand(commands2.Command):
         self.y_speed = y_speed
         self.addRequirements(yessub)
 
+
     def initialize(self):
         self.yessub.setMotorSpeed(self.y_speed)
 
