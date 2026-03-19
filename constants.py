@@ -130,12 +130,13 @@ class turretMotorConstants:
     TURRET_SHOOT_MOTOR_TWO = 17  
 
     TURRET_SHOOT_POWER = 0.35
+    TURRET_SHOOT_POWER_AUTO = 0.2
 
     TURRET_ANGLE_90 = 0.975
     TURRET_ANGLE_60 = 0.902
 
     TURRET_VERTICAL_SPEED = 0.05
-    TURRET_HOLD_SPEED = 0.01
+    # TURRET_HOLD_SPEED = 0.01 ... use this as last resort if PID doesnt work
 
 class fuelConstants:
     EAT_POWER = 1.0
