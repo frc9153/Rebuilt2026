@@ -43,7 +43,7 @@ class RobotContainer:
         self.shooter = turretShootMotorSubsystem()
         # self.limelight = turretCameraSubsystem()
         # self.nosub = turretHorizontalMotorSubsystem()
-        # self.yessub = turretVerticalMotorSubsystem()
+        self.yessub = turretVerticalMotorSubsystem()
         self.elevator = elevatorSubsystem()
         self.autoCommand = autoRoutine(
             self.shooter,
@@ -54,7 +54,7 @@ class RobotContainer:
 
         # Command groups
 
-        self.shooterYuhHuhCommand = shooterYuhHuhCommand(self.shooter, 0.1)
+        self.shooterYuhHuhCommand = shooterYuhHuhCommand(self.yessub, 0.1)
         
         self.elevatorFloorToRungCommand = commands2.SequentialCommandGroup(
             # Assume we start at BOTTOM
@@ -116,8 +116,8 @@ class RobotContainer:
         self.operatorController.povLeft().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE))
         self.operatorController.povDown().onTrue(fuelUpDownCommand(self.fuelUpDown, fuelConstants.FUEL_UP_DOWN_SETPOINT_BOTTOM))
 
-        self.operatorController.leftBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_90))
-        self.operatorController.rightBumper().onTrue(shooterYuhHuhCommand(self.shooter, turretMotorConstants.TURRET_ANGLE_60))
+        self.operatorController.leftBumper().onTrue(shooterYuhHuhCommand(self.yessub, turretMotorConstants.TURRET_VERTICAL_SPEED)
+        self.operatorController.rightBumper().onTrue(shooterYuhHuhCommand(self.yessub, turretMotorConstants.TURRET_VERTICAL_SPEED))
 
         self.operatorController.rightTrigger().whileTrue(shooterShootCommand(self.shooter, turretMotorConstants.TURRET_SHOOT_POWER))
         self.operatorController.leftTrigger().whileTrue(indexerPukeCommand(self.indexer))

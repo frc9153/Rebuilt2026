@@ -134,6 +134,8 @@ class turretMotorConstants:
     TURRET_ANGLE_90 = 0.975
     TURRET_ANGLE_60 = 0.902
 
+    TURRET_VERTICAL_SPEED = 0.2``
+
 class fuelConstants:
     EAT_POWER = 1.0
 

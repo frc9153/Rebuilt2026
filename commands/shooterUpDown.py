@@ -1,10 +1,8 @@
 import commands2
-
 from constants import turretMotorConstants
 from subsystems.turretVerticalMotor import turretVerticalMotorSubsystem
 
 class shooterYuhHuhCommand(commands2.Command):
-
     def __init__(self, yessub: turretVerticalMotorSubsystem, y_speed: float):
         super().__init__()
         self.yessub = yessub
@@ -15,16 +13,16 @@ class shooterYuhHuhCommand(commands2.Command):
         self.yessub.setMotorSpeed(self.y_speed)
 
     def execute(self):
-        pass
+        angle = self.yessub.getAbsolutePosition()
+        if self.y_speed > 0 and angle >= turretMotorConstants.TURRET_ANGLE_90:
+            self.yessub.setMotorSpeed(0)  # hit top limit, stop
+        elif self.y_speed < 0 and angle <= turretMotorConstants.TURRET_ANGLE_60:
+            self.yessub.setMotorSpeed(0)  # hit bottom limit, stop
+        else:
+            self.yessub.setMotorSpeed(self.y_speed)  
 
     def end(self, interrupted):
         self.yessub.setMotorSpeed(0)
 
     def isFinished(self):
-        angle = self.yessub.getAbsolutePosition()
-
-        if self.y_speed > 0 and angle >= turretMotorConstants.TURRET_ANGLE_90:
-            return True
-        if self.y_speed < 0 and angle <= turretMotorConstants.TURRET_ANGLE_60:
-            return True
-        return False
+        return False  
