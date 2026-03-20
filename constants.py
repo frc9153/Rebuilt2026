@@ -141,7 +141,7 @@ class turretMotorConstants:
 class fuelConstants:
     EAT_POWER = 1.0
 
-    FUEL_UP_DOWN_SETPOINT_BOTTOM = 0.52
+    FUEL_UP_DOWN_SETPOINT_BOTTOM = 0.5
     FUEL_UP_DOWN_SETPOINT_MIDDLE = .564
     FUEL_UP_DOWN_SETPOINT_TOP = 0.696
 

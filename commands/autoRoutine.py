@@ -27,14 +27,14 @@ class autoRoutine(commands2.SequentialCommandGroup):
             fuelUpDownCommand(fuel, fuelConstants.FUEL_UP_DOWN_SETPOINT_MIDDLE),
 
             # spins da shooter until up 2 speed
-            shooterShootCommand(shooter, turretMotorConstants.TURRET_SHOOT_POWER_AUTO)
+            shooterShootCommand(shooter, turretMotorConstants.TURRET_SHOOT_POWER)
                 .withTimeout(1.0),
 
             # feeds balls thru indexer but adjust timeout in tuning
             commands2.ParallelCommandGroup(
                 shooterShootCommand(shooter, turretMotorConstants.TURRET_SHOOT_POWER),
                 indexerPukeCommand(indexer),
-            ).withTimeout(15.0),
+            ).withTimeout(5.0),
 
             # L1 climb
             # elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
