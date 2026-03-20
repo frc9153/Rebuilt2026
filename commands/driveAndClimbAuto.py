@@ -20,7 +20,7 @@ class driveAndClimbAuto(commands2.SequentialCommandGroup):
                 drive
             ),
 
-            # drives forward, TUNE SPEED AND TIME 
+            # drives forward, TUNE SPEED AND TIME  WHY DOESNT ANYTHING GO AHHH
             commands2.RunCommand(
                 lambda: drive.drive(0.3, 0.0, 0.0, fieldRelative=False, rateLimit=False),
                 drive
