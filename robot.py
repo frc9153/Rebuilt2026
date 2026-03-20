@@ -28,6 +28,7 @@ class MyRobot(commands2.TimedCommandRobot):
 
         self.chooser = wpilib.SendableChooser()
         self.chooser.setDefaultOption("Basic Auto", self.container.autoCommand)
+        self.chooser.addOption("Drive and Climb", self.container.driveAndClimbCommand)
 
         SmartDashboard.putData("Autonomous Mode", self.chooser)
 

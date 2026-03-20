@@ -33,6 +33,7 @@ from commands.shooterLeftRight import shooterNuhUhCommand
 from commands.shooterUpDown import shooterYuhHuhCommand
 from commands.autoRoutine import autoRoutine
 from commands.holdShooter import holdShooterAngleCommand
+from commands.driveAndClimbAuto import driveAndClimbAuto
 
 class RobotContainer:
     def __init__(self) -> None:
@@ -53,6 +54,11 @@ class RobotContainer:
             # self.elevator,
             self.fuelUpDown
         )
+
+        self.driveAndClimbCommand = driveAndClimbAuto(
+            self.robot_drive,
+            self.elevator,
+)
 
         # Command groups
 
