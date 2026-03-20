@@ -5,26 +5,33 @@ from subsystems.elevator import elevatorSubsystem
 from constants import elevatorConstants
 
 class driveAndClimbAuto(commands2.SequentialCommandGroup):
-    def __init__(
-        self,
-        drive: DriveSubsystem,
-        elevator: elevatorSubsystem,
-    ):
+    def __init__(self, drive: DriveSubsystem, elevator: elevatorSubsystem):
         super().__init__()
         self.addCommands(
-            # makes us drive forward 
-            # note: first value in the .drive controls speed, the timeout controls time driving
+            # rotate 90 degrees - TUNE
             commands2.RunCommand(
-                lambda: drive.drive(0.3, 0.0, 0.0, fieldRelative=False, rateLimit=False),
+                lambda: drive.drive(0.0, 0.0, 0.5, fieldRelative=False, rateLimit=False),
                 drive
-            ).withTimeout(3.0),
+            ).withTimeout(1.0),  # TUNE UNTIL MAKES 90 DEGREE TURN
 
-            # stops driving
+            # no more rotate
             commands2.InstantCommand(
                 lambda: drive.drive(0.0, 0.0, 0.0, fieldRelative=False, rateLimit=False),
                 drive
             ),
 
-            # climb! hopefully.....
-            elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP),
+            # drives forward, TUNE SPEED AND TIME 
+            commands2.RunCommand(
+                lambda: drive.drive(0.3, 0.0, 0.0, fieldRelative=False, rateLimit=False),
+                drive
+            ).withTimeout(3.0), # this number tunes the time
+
+            # no more drive
+            commands2.InstantCommand(
+                lambda: drive.drive(0.0, 0.0, 0.0, fieldRelative=False, rateLimit=False),
+                drive
+            ),
+
+            # climb
+            elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM),
         )
