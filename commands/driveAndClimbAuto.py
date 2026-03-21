@@ -31,7 +31,7 @@ class driveAndClimbAuto(commands2.SequentialCommandGroup):
 
             # 
             commands2.RunCommand(
-                lambda: drive.drive(0.0, 0.0, limelight.centerPlease(), fieldRelative=False, rateLimit=False),
+                lambda: drive.drive(limelight.centerPlease(), 0.0, 0.0, fieldRelative=False, rateLimit=False),
                 drive
             ).until(lambda: abs(limelight.tx.get()) < 1.0),  # stop when within 1 degree of center
 
