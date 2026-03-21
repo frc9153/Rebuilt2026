@@ -1,6 +1,7 @@
 import json
 import commands2
 from ntcore import NetworkTableInstance
+from constants import DriveConstants
 
 # -- NOTES FOR WHOEVER WRITTEN BY THE HIGH QUEEN OF MAGICA --
 # 1. Calibrate via setup here: https://docs.limelightvision.io/docs/docs-limelight/pipeline-apriltag/apriltags
@@ -15,6 +16,7 @@ class turretCameraSubsystem(commands2.Subsystem):
         # name of table can change depending on wat we name it... be careful
         self.table = NetworkTableInstance.getDefault().getTable("limelight")
         self.tx = self.table.getDoubleTopic("tx").subscribe(0.0)
+        self.ta = self.table.getDoubleTopic("ta").subscribe(0.0)
         # self.pose = self.table.getDoubleArrayTopic("botpose").subscribe([])
 
     def isPastClimbAlignmentPoint(self) -> bool:
@@ -25,7 +27,10 @@ class turretCameraSubsystem(commands2.Subsystem):
         # if the value is LESS than 0.0, the target is to the right 
         # if the value is MORE than 0.0, the target is to the left
         # tune... tune... tune... please tune... please... 
-        return self.tx.get() < 0.0
+        return self.ta.get() > 0.1
+    
+    def centerPlease(self) -> float:
+        return (self.tx.get() / 27) * DriveConstants.kAutoSpeed
 
     # def get_pose(self):
     #     return self.pose.get()

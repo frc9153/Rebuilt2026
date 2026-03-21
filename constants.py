@@ -24,6 +24,7 @@ class DriveConstants:
     # the robot, rather the allowed maximum speeds
     # Original: 4.8
     kMaxSpeed = 3.7
+    kAutoSpeed = 1.5
     kMaxAngularSpeed = (math.tau) * 0.5  # radians per second
 
     kDirectionSlewRate = 1.2  # radians per second

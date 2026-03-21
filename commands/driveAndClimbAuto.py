@@ -29,6 +29,18 @@ class driveAndClimbAuto(commands2.SequentialCommandGroup):
                 drive
             ),
 
+            # 
+            commands2.RunCommand(
+                lambda: drive.drive(0.0, 0.0, limelight.centerPlease(), fieldRelative=False, rateLimit=False),
+                drive
+            ).until(lambda: abs(limelight.tx.get()) < 1.0),  # stop when within 1 degree of center
+
+            # Stop
+            commands2.InstantCommand(
+                lambda: drive.drive(0.0, 0.0, 0.0, fieldRelative=False, rateLimit=False),
+                drive
+            ),
+
             # climb! hopefully.....
             elevateToPointCommand(elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM)
         )
