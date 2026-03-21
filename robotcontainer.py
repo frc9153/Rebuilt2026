@@ -34,6 +34,7 @@ from commands.shooterUpDown import shooterYuhHuhCommand
 from commands.autoRoutine import autoRoutine
 from commands.holdShooter import holdShooterAngleCommand
 from commands.driveAndClimbAuto import driveAndClimbAuto
+from commands.fuelPuke import fuelPukeCommand
 
 class RobotContainer:
     def __init__(self) -> None:
@@ -132,6 +133,7 @@ class RobotContainer:
 
         self.operatorController.y().whileTrue(indexerReversePukeCommand(self.indexer))
         self.operatorController.a().whileTrue(fuelEatCommand(self.fuelIntake))
+        self.operatorController.b().whileTrue(fuelPukeCommand(self.fuelIntake))
 
         self.driverController.x().onTrue(reset_gyro)
         self.driverController.b().onTrue(elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM))
