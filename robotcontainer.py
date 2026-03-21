@@ -44,7 +44,7 @@ class RobotContainer:
         self.indexer = indexerSubsystem()
         self.fuelUpDown = fuelUpDownSubsystem()
         self.shooter = turretShootMotorSubsystem()
-        # self.limelight = turretCameraSubsystem()
+        self.limelight = turretCameraSubsystem()
         # self.nosub = turretHorizontalMotorSubsystem()
         self.yessub = turretVerticalMotorSubsystem()
         self.yessub.setDefaultCommand(holdShooterAngleCommand(self.yessub))
@@ -57,9 +57,10 @@ class RobotContainer:
         )
 
         self.driveAndClimbCommand = driveAndClimbAuto(
+            self.limelight,
             self.robot_drive,
             self.elevator,
-)
+        )
 
         # Command groups
 
