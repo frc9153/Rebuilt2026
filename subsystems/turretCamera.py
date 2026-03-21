@@ -19,6 +19,12 @@ class turretCameraSubsystem(commands2.Subsystem):
 
     def isPastClimbAlignmentPoint(self) -> bool:
         # TODO: CHANGE THIS CONDITION!!!
+        # jamie add-on note for geniuses:
+        # the value below is the HORIZONTAL OFFSET of the camera to the apriltag
+        # if the value is equal to 0.0, the robot is perfectly centered
+        # if the value is LESS than 0.0, the target is to the right 
+        # if the value is MORE than 0.0, the target is to the left
+        # tune... tune... tune... please tune... please... 
         return self.tx.get() < 0.0
 
     # def get_pose(self):
