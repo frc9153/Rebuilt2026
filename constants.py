@@ -175,9 +175,11 @@ class autoAimConstants:
     # his home front wall
     # his driveway
     # his car
-    # his roat
+    # his road
     # his neighobrs
 
     # his sheveport
     SWERVE_P = 0.2
     SWERVE_MAX_POWER = 0.3
+    SWERVE_MAX_ROTATE = 0.3
+    ANGLE_ALTERATION_MULTIPLIER = 0.2

@@ -17,6 +17,7 @@ from commands.fuelEat import fuelEatCommand
 from commands.fuelUpDown import fuelUpDownCommand
 from commands.indexerPuke import indexerPukeCommand
 from commands.indexerReversePuke import indexerReversePukeCommand 
+from commands.shooterAutoAim import shooterAutoAimCommand
 from commands.shooterShoot import shooterShootCommand
 from constants import OIConstants, elevatorConstants, fuelConstants, turretMotorConstants
 from commands.driveCommand import DriveCommand
@@ -136,6 +137,11 @@ class RobotContainer:
         self.operatorController.a().whileTrue(fuelEatCommand(self.fuelIntake))
         self.operatorController.b().whileTrue(fuelPukeCommand(self.fuelIntake))
 
+        self.driverController.a().whileTrue(shooterAutoAimCommand(
+            self.drive,
+            self.limelight,
+            lambda: -wpimath.applyDeadband(self.driverController.getLeftX(), OIConstants.kDriveDeadband),
+        ))
         self.driverController.x().onTrue(reset_gyro)
         self.driverController.b().onTrue(elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_BOTTOM))
         self.driverController.y().onTrue(elevateToPointCommand(self.elevator, elevatorConstants.ELEVATOR_SETPOINT_TOP))

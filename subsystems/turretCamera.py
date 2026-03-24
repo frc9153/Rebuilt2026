@@ -17,7 +17,7 @@ class turretCameraSubsystem(commands2.Subsystem):
         self.table = NetworkTableInstance.getDefault().getTable("limelight")
         self.tx = self.table.getDoubleTopic("tx").subscribe(0.0)
         self.ta = self.table.getDoubleTopic("ta").subscribe(0.0)
-        # self.pose = self.table.getDoubleArrayTopic("botpose").subscribe([])
+        self.pose = self.table.getDoubleArrayTopic("botpose").subscribe([])
 
     def isPastClimbAlignmentPoint(self) -> bool:
         # TODO: CHANGE THIS CONDITION!!!
@@ -32,8 +32,8 @@ class turretCameraSubsystem(commands2.Subsystem):
     def centerPlease(self) -> float:
         return (self.tx.get() / 27) * DriveConstants.kAutoSpeed
 
-    def get_field_position(self) -> list[float]:
-        raise NotImplementedError
+    def get_field_pose(self) -> list[float]:
+        raise self.pose.get()
 
     # def get_pose(self):
     #     return self.pose.get()
