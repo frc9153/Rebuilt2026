@@ -18,6 +18,7 @@ class intakeSubsystem(commands2.Subsystem):
             rev.ResetMode.kResetSafeParameters,
             rev.PersistMode.kPersistParameters,
         )
+        config.setIdleMode(rev.SparkBaseConfig.IdleMode.kBrake)
     
     def setPower(self, speed: float) -> None:
         self.motor.set(speed)

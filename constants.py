@@ -23,7 +23,7 @@ class DriveConstants:
     # Driving Parameters - Note that these are not the maximum capable speeds of
     # the robot, rather the allowed maximum speeds
     # Original: 4.8
-    kMaxSpeed = 3.7
+    kMaxSpeed = 4.2
     kAutoSpeed = 1.5
     kMaxAngularSpeed = (math.tau) * 0.5  # radians per second
 
@@ -163,3 +163,21 @@ class elevatorConstants:
 class indexerConstants:
     INDEXER_POWER = 1.0
     INDEXER_MOTOR = 15
+
+class autoAimConstants:
+    # his home back wall
+    # his kitchen
+    # his half-wall
+    # his couch
+    JAMIE_DISTANCE = 1.0
+    # his tv (his kities on top)
+    # his staircase
+    # his home front wall
+    # his driveway
+    # his car
+    # his roat
+    # his neighobrs
+
+    # his sheveport
+    SWERVE_P = 0.2
+    SWERVE_MAX_POWER = 0.3

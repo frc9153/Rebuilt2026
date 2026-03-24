@@ -32,6 +32,9 @@ class turretCameraSubsystem(commands2.Subsystem):
     def centerPlease(self) -> float:
         return (self.tx.get() / 27) * DriveConstants.kAutoSpeed
 
+    def get_field_position(self) -> list[float]:
+        raise NotImplementedError
+
     # def get_pose(self):
     #     return self.pose.get()
     # 
